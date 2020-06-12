@@ -27,8 +27,8 @@ jobs:
           python-version: "3.8"
       - name: Print events
         run: |
-          echo ${{ github.event.ref }}
-          echo ${{ github.ref }}
+          echo "${{ github.event.ref }}"
+          echo "${{ github.ref }}"
       - name: Push and ref
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
         run: echo "OK"

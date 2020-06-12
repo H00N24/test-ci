@@ -1,0 +1,37 @@
+name: Test CI
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the master branch
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  # Also trigger on page_build, as well as release created events
+  page_build:
+  release:
+    types: # This configuration does not affect the page_build event above
+      - created
+jobs:
+  build_package:
+    name: Build Package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8"
+      - uses: bash
+        run: |
+          echo ${{ github.event.ref }}
+          echo ${{ github.ref }}
+      - name: Push and ref
+        if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+        run: echo "OK"
+      - name: Publish distribution 📦 to PyPI
+        if: github.event_name == 'release'
+        run: echo "Mozno"
